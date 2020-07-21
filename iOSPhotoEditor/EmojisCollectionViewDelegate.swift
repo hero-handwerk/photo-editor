@@ -49,7 +49,7 @@ class EmojisCollectionViewDelegate: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCollectionViewCell", for: indexPath) as! EmojiCollectionViewCell
+        let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: EmojiCollectionViewCell.self), for: indexPath) as! EmojiCollectionViewCell
         cell.emojiLabel.text = emojis[indexPath.item]
         return cell
     }
