@@ -8,7 +8,20 @@
 
 import UIKit
 
+public protocol PhotoEditorTracker {
+    func track(event: PhotoEditorViewController.Event)
+}
+
 public final class PhotoEditorViewController: UIViewController {
+    public enum Event {
+        case done
+        case cancel
+        case share
+        case crop
+        case draw
+        case text
+        case revert
+    }
     
     /** holding the 2 imageViews original image and drawing & stickers */
     @IBOutlet weak var canvasView: UIView!
@@ -36,7 +49,8 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var clearButton: UIBarButtonItem!
     
-    public var image: UIImage?
+    private(set) var image: UIImage?
+    private(set) var tracker: PhotoEditorTracker?
     /**
      Array of Stickers -UIImage- that the user will choose from
      */
@@ -222,7 +236,27 @@ extension PhotoEditorViewController: ColorDelegate {
     }
 }
 
-
-
-
-
+// MARK: - Builder
+public extension PhotoEditorViewController {
+    static public func make(image: UIImage, delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
+        let photoEditor = instantiate(delegate: delegate, tracker: tracker)
+        photoEditor?.image = image
+        return photoEditor
+    }
+    
+    static public func make(imageFileURL: URL, delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
+        let photoEditor = instantiate(delegate: delegate, tracker: tracker)
+        if let data = try? Data(contentsOf: imageFileURL) {
+            photoEditor?.image = UIImage(data: data)
+        }
+        return photoEditor
+    }
+    
+    static private func instantiate(delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
+        let photoEditor = UIStoryboard(name: "PhotoEditor", bundle: Bundle.iOSPhotoEditorResourceBundle)
+            .instantiateViewController(withIdentifier: String(describing: PhotoEditorViewController.self)) as? PhotoEditorViewController
+        photoEditor?.photoEditorDelegate = delegate
+        photoEditor?.tracker = tracker
+        return photoEditor
+    }
+}

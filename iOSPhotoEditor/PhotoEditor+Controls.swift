@@ -25,6 +25,8 @@ extension PhotoEditorViewController {
     @IBAction func cancelButtonTapped(_ sender: Any) {
         photoEditorDelegate?.canceledEditing()
         self.dismiss(animated: true, completion: nil)
+        
+        tracker?.track(event: .cancel)
     }
 
     @IBAction func cropButtonTapped(_ sender: Any) {
@@ -42,6 +44,8 @@ extension PhotoEditorViewController {
         navController.toolbar.isTranslucent = navigationController?.toolbar.isTranslucent ?? false
 
         present(navController, animated: true, completion: nil)
+        
+        tracker?.track(event: .crop)
     }
 
     @IBAction func stickersButtonTapped(_ sender: Any) {
@@ -54,6 +58,8 @@ extension PhotoEditorViewController {
         showToolbar(show: false)
         showDoneButton(show: true)
         showColorPicker(show: true)
+        
+        tracker?.track(event: .draw)
     }
 
     @IBAction func textButtonTapped(_ sender: Any) {
@@ -74,6 +80,8 @@ extension PhotoEditorViewController {
         self.canvasImageView.addSubview(textView)
         addGestures(view: textView)
         textView.becomeFirstResponder()
+        
+        tracker?.track(event: .text)
     }    
     
     @IBAction func doneButtonTapped(_ sender: Any) {
@@ -94,6 +102,8 @@ extension PhotoEditorViewController {
         let activity = UIActivityViewController(activityItems: [canvasView.toImage()], applicationActivities: nil)
         present(activity, animated: true, completion: nil)
         
+        tracker?.track(event: .share)
+        
     }
     
     @IBAction func clearButtonTapped(_ sender: AnyObject) {
@@ -103,12 +113,16 @@ extension PhotoEditorViewController {
         for subview in canvasImageView.subviews {
             subview.removeFromSuperview()
         }
+        
+        tracker?.track(event: .revert)
     }
     
     @IBAction func continueButtonPressed(_ sender: Any) {
         let img = self.canvasView.toImage()
         photoEditorDelegate?.doneEditing(image: img)
         self.dismiss(animated: true, completion: nil)
+        
+        tracker?.track(event: .done)
     }
 
     //MAKR: helper methods
