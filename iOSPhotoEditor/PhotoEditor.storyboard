@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,6 +17,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mt2-Af-EC2" userLabel="Background View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemFillColor"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u9S-zw-Vwj" userLabel="canvas">
                                 <rect key="frame" x="0.0" y="117" width="414" height="667"/>
                                 <subviews>
@@ -89,20 +94,24 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="J5W-Oh-8VI"/>
+                        <color key="backgroundColor" red="0.12156862745098039" green="0.12941176470588234" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="J5W-Oh-8VI" firstAttribute="bottom" secondItem="wBZ-dn-iO8" secondAttribute="bottom" constant="12" id="5gR-vl-SfI"/>
                             <constraint firstItem="u9S-zw-Vwj" firstAttribute="centerY" secondItem="J5W-Oh-8VI" secondAttribute="centerY" id="AyS-Au-xSQ"/>
+                            <constraint firstAttribute="bottom" secondItem="Mt2-Af-EC2" secondAttribute="bottom" id="BcS-Dd-OV7"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="b4y-yc-5HD" secondAttribute="bottom" id="CQU-wg-ZXU"/>
                             <constraint firstItem="wBZ-dn-iO8" firstAttribute="centerX" secondItem="zNK-rB-CJ1" secondAttribute="centerX" id="ER0-QM-Nxc"/>
+                            <constraint firstItem="Mt2-Af-EC2" firstAttribute="top" secondItem="zNK-rB-CJ1" secondAttribute="top" id="RR0-Xn-QO6"/>
                             <constraint firstItem="u9S-zw-Vwj" firstAttribute="leading" secondItem="J5W-Oh-8VI" secondAttribute="leading" id="Vud-gF-dRH"/>
                             <constraint firstItem="u9S-zw-Vwj" firstAttribute="trailing" secondItem="J5W-Oh-8VI" secondAttribute="trailing" id="cZt-UM-3G5"/>
                             <constraint firstItem="J5W-Oh-8VI" firstAttribute="trailing" secondItem="b4y-yc-5HD" secondAttribute="trailing" id="fXx-KK-SFW"/>
+                            <constraint firstItem="Mt2-Af-EC2" firstAttribute="trailing" secondItem="J5W-Oh-8VI" secondAttribute="trailing" id="lV9-QU-F0J"/>
+                            <constraint firstItem="Mt2-Af-EC2" firstAttribute="leading" secondItem="J5W-Oh-8VI" secondAttribute="leading" id="pfu-lk-pCm"/>
                             <constraint firstItem="b4y-yc-5HD" firstAttribute="bottom" secondItem="J5W-Oh-8VI" secondAttribute="bottom" priority="750" id="q1s-KL-VI3"/>
                             <constraint firstItem="u9S-zw-Vwj" firstAttribute="centerX" secondItem="J5W-Oh-8VI" secondAttribute="centerX" id="sA1-NI-BSi"/>
                             <constraint firstItem="b4y-yc-5HD" firstAttribute="leading" secondItem="J5W-Oh-8VI" secondAttribute="leading" id="t7H-uq-Aju"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="J5W-Oh-8VI"/>
                     </view>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="QHp-nj-mHK"/>
@@ -193,7 +202,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g8K-I6-KiX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-464" y="74"/>
+            <point key="canvasLocation" x="-465.21739130434787" y="73.660714285714278"/>
         </scene>
         <!--Stickers View Controller-->
         <scene sceneID="Pxu-pG-fUM">
@@ -215,7 +224,7 @@
                                         </constraints>
                                     </view>
                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="n3T-oa-yCm">
-                                        <rect key="frame" x="187.5" y="13" width="39" height="37"/>
+                                        <rect key="frame" x="149.5" y="13" width="115.5" height="26"/>
                                     </pageControl>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -231,6 +240,7 @@
                                 <rect key="frame" x="0.0" y="84" width="414" height="812"/>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="d2c-L6-KQi"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Emp-cu-4Ip" firstAttribute="top" secondItem="lB4-MI-0p4" secondAttribute="bottom" id="3mt-AS-Zd1"/>
@@ -241,7 +251,6 @@
                             <constraint firstAttribute="bottom" secondItem="Emp-cu-4Ip" secondAttribute="bottom" id="bv8-Ff-Gvs"/>
                             <constraint firstItem="lB4-MI-0p4" firstAttribute="leading" secondItem="d2c-L6-KQi" secondAttribute="leading" id="uGX-fZ-z84"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="d2c-L6-KQi"/>
                     </view>
                     <connections>
                         <outlet property="headerView" destination="lB4-MI-0p4" id="GIU-eQ-QDC"/>
@@ -266,5 +275,8 @@
         <image name="text.cursor" width="26.5" height="29.5"/>
         <image name="trash" width="24.5" height="30.5"/>
         <image name="xmark" width="23" height="19.5"/>
+        <systemColor name="systemFillColor">
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

@@ -49,7 +49,13 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var clearButton: UIBarButtonItem!
     
-    private(set) var image: UIImage?
+    private(set) var image: UIImage? {
+        didSet {
+            if isViewLoaded {
+                setImageView(image: image)
+            }
+        }
+    }
     private(set) var tracker: PhotoEditorTracker?
     /**
      Array of Stickers -UIImage- that the user will choose from
@@ -86,7 +92,8 @@ public final class PhotoEditorViewController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.setImageView(image: image!)
+        
+        setImageView(image: image)
         
         deleteView.layer.cornerRadius = deleteView.bounds.height / 2
         deleteView.layer.borderWidth = 2.0
@@ -140,10 +147,15 @@ public final class PhotoEditorViewController: UIViewController {
             forCellWithReuseIdentifier: String(describing: ColorCollectionViewCell.self))
     }
     
-    func setImageView(image: UIImage) {
+    func setImageView(image: UIImage?) {
         imageView.image = image
-        let size = image.suitableSize(widthLimit: UIScreen.main.bounds.width)
-        imageViewHeightConstraint.constant = (size?.height)!
+        
+        if
+            let image = image,
+            let size = image.suitableSize(widthLimit: UIScreen.main.bounds.width) {
+            
+            imageViewHeightConstraint.constant = size.height
+        }
     }
     
     func showToolbar(show: Bool, animated: Bool = true) {
