@@ -20,13 +20,21 @@ extension PhotoEditorViewController {
         case draw
         case text
         case clear
+        case reset
     }
 
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        photoEditorDelegate?.canceledEditing()
-        self.dismiss(animated: true, completion: nil)
+        guard undoManager?.canUndo == true else {
+            cancel()
+            return
+        }
         
-        tracker?.track(event: .cancel)
+        let alert = UIAlertController(title: "Möchten Sie wirklich alle Markierungen verwerfen?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Änderungen verwerfen", style: .destructive) { _ in
+            self.cancel()
+        })
+        alert.addAction(UIAlertAction(title: "Weiter bearbeiten", style: .cancel))
+        present(alert, animated: true, completion: nil)
     }
 
     @IBAction func cropButtonTapped(_ sender: Any) {
@@ -57,6 +65,7 @@ extension PhotoEditorViewController {
         canvasImageView.isUserInteractionEnabled = false
         showToolbar(show: false)
         showDoneButton(show: true)
+        showDrawActionControlButtons(show: true)
         showColorPicker(show: true)
         
         tracker?.track(event: .draw)
@@ -86,6 +95,8 @@ extension PhotoEditorViewController {
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         view.endEditing(true)
+        
+        showDrawActionControlButtons(show: false)
         showDoneButton(show: false)
         showColorPicker(show: false) {
             self.showToolbar(show: true)
@@ -114,7 +125,22 @@ extension PhotoEditorViewController {
             subview.removeFromSuperview()
         }
         
+        backupColoredLines = coloredLines
+        coloredLines = [coloredLine]()
+        removedLines = [coloredLine]()
+        canResetLines = undoManager?.canUndo == true
+        addControls(animated: false)
+        
         tracker?.track(event: .revert)
+    }
+    
+    @IBAction func resetButtonTapped(_ sender: Any) {
+        let alert = UIAlertController(title: "Möchten Sie wirklich alle Markierungen wiederherstellen?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Abbrechen", style: .destructive))
+        alert.addAction(UIAlertAction(title: "Wiederherstellen", style: .cancel) { _ in
+            self.reset()
+        })
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func continueButtonPressed(_ sender: Any) {
@@ -123,6 +149,20 @@ extension PhotoEditorViewController {
         self.dismiss(animated: true, completion: nil)
         
         tracker?.track(event: .done)
+    }
+    
+    @IBAction func undoButtonTapped(_ sender: Any) {
+        if undoManager?.canUndo == true {
+            undoManager?.undo()
+        }
+        manageBarButtonVisibility()
+    }
+    
+    @IBAction func redoButtonTapped(_ sender: Any) {
+        if undoManager?.canRedo == true {
+            undoManager?.redo()
+        }
+        manageBarButtonVisibility()
     }
 
     //MAKR: helper methods
@@ -160,6 +200,11 @@ extension PhotoEditorViewController {
             case .clear:
                 barButtonItems.append(flexibleSpaceBarButtonItem())
                 barButtonItems.append(clearButton)
+            case .reset:
+                if canResetLines {
+                    barButtonItems.append(flexibleSpaceBarButtonItem())
+                    barButtonItems.append(resetButton)
+                }
             }
         }
 
@@ -171,5 +216,30 @@ extension PhotoEditorViewController {
 
     private func flexibleSpaceBarButtonItem() -> UIBarButtonItem {
         UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    }
+    
+    func manageBarButtonVisibility() {
+        undoButton.isEnabled = undoManager?.canUndo ?? false
+        redoButton.isEnabled = undoManager?.canRedo ?? false
+    }
+    
+    func cancel() {
+        photoEditorDelegate?.canceledEditing()
+        dismiss(animated: true, completion: nil)
+        
+        tracker?.track(event: .cancel)
+    }
+    
+    func reset() {
+        canvasImageView.image = nil
+        for subview in canvasImageView.subviews {
+            subview.removeFromSuperview()
+        }
+        draw(backupColoredLines)
+        coloredLines = backupColoredLines
+        canResetLines = false
+        addControls(animated: false)
+        
+        tracker?.track(event: .reset)
     }
 }

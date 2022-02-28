@@ -21,6 +21,7 @@ public final class PhotoEditorViewController: UIViewController {
         case draw
         case text
         case revert
+        case reset
     }
     
     /** holding the 2 imageViews original image and drawing & stickers */
@@ -48,6 +49,9 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var clearButton: UIBarButtonItem!
+    @IBOutlet var undoButton: UIBarButtonItem!
+    @IBOutlet var redoButton: UIBarButtonItem!
+    @IBOutlet var resetButton: UIBarButtonItem!
     
     private(set) var image: UIImage? {
         didSet {
@@ -83,6 +87,12 @@ public final class PhotoEditorViewController: UIViewController {
     var lastTextViewFont:UIFont?
     var activeTextView: UITextView?
     var imageViewToPan: UIImageView?
+    
+    typealias coloredLine = [ColoredPoint]
+    var coloredLines = [coloredLine]()
+    var removedLines = [coloredLine]()
+    var backupColoredLines = [coloredLine]()
+    var canResetLines = false
 
     weak var stickersViewController: StickersViewController?
 
@@ -109,7 +119,7 @@ public final class PhotoEditorViewController: UIViewController {
         NotificationCenter.default.addObserver(self,selector: #selector(keyboardWillChangeFrame(_:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
-        
+        manageBarButtonVisibility()
         configureCollectionView()
         navigationItem.rightBarButtonItems = [continueButton]
     }
@@ -170,13 +180,21 @@ public final class PhotoEditorViewController: UIViewController {
     func showDoneButton(show: Bool) {
         if show {
             if navigationItem.rightBarButtonItem == doneButton { return }
-            navigationItem.setLeftBarButton(nil, animated: true)
-            navigationItem.setRightBarButton(doneButton, animated: true)
+            navigationItem.rightBarButtonItems = [doneButton]
         }
         else {
             if navigationItem.rightBarButtonItem == continueButton { return }
             navigationItem.setLeftBarButton(cancelButton, animated: true)
             navigationItem.setRightBarButton(continueButton, animated: true)
+        }
+    }
+    
+    func showDrawActionControlButtons(show: Bool) {
+        if show {
+            navigationItem.rightBarButtonItems?.append(redoButton)
+            navigationItem.rightBarButtonItems?.append(undoButton)
+        } else {
+            navigationItem.rightBarButtonItems = nil
         }
     }
 
