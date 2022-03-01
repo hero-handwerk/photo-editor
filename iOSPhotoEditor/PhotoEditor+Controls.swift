@@ -23,17 +23,18 @@ extension PhotoEditorViewController {
         case reset
     }
 
-    @IBAction func cancelButtonTapped(_ sender: Any) {
+    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
         guard undoManager?.canUndo == true else {
             cancel()
             return
         }
-        
-        let alert = UIAlertController(title: "Möchten Sie wirklich alle Markierungen verwerfen?", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Änderungen verwerfen", style: .destructive) { _ in
-            self.cancel()
+        let alert = UIAlertController( title: "Möchten Sie wirklich alle Markierungen verwerfen?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Änderungen verwerfen", style: .destructive) { [weak self] _ in
+            self?.cancel()
         })
-        alert.addAction(UIAlertAction(title: "Weiter bearbeiten", style: .cancel))
+        let actionStyle: UIAlertAction.Style = UIDevice.current.userInterfaceIdiom == .pad ? .default : .cancel
+        alert.addAction(UIAlertAction(title: "Weiter bearbeiten", style: actionStyle))
+        alert.popoverPresentationController?.barButtonItem = sender
         present(alert, animated: true, completion: nil)
     }
 
@@ -134,12 +135,15 @@ extension PhotoEditorViewController {
         tracker?.track(event: .revert)
     }
     
-    @IBAction func resetButtonTapped(_ sender: Any) {
+    @IBAction func resetButtonTapped(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Möchten Sie wirklich alle Markierungen wiederherstellen?", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Abbrechen", style: .destructive))
-        alert.addAction(UIAlertAction(title: "Wiederherstellen", style: .cancel) { _ in
-            self.reset()
+        
+        let actionStyle: UIAlertAction.Style = UIDevice.current.userInterfaceIdiom == .pad ? .default : .cancel
+        alert.addAction(UIAlertAction(title: "Wiederherstellen", style: actionStyle) { [weak self] _ in
+            self?.reset()
         })
+        alert.popoverPresentationController?.barButtonItem = sender
         present(alert, animated: true, completion: nil)
     }
     

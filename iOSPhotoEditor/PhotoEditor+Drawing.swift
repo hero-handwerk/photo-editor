@@ -101,16 +101,16 @@ extension PhotoEditorViewController {
 // MARK: - UndoManager
 extension PhotoEditorViewController {
     func addLineUndoActionRegister() {
-        undoManager?.registerUndo(withTarget: self, handler: { _ in
-            self.removeLastLine()
-            self.removeLineUndoActionRegister()
+        undoManager?.registerUndo(withTarget: self, handler: { [weak self] _ in
+            self?.removeLastLine()
+            self?.removeLineUndoActionRegister()
         })
     }
     
     func removeLineUndoActionRegister() {
-        undoManager?.registerUndo(withTarget: self, handler: { _ in
-            self.addLastLine()
-            self.addLineUndoActionRegister()
+        undoManager?.registerUndo(withTarget: self, handler: { [weak self] _ in
+            self?.addLastLine()
+            self?.addLineUndoActionRegister()
         })
     }
     
