@@ -157,6 +157,12 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="dmd-g5-Ooq"/>
+                        <barButtonItem title="Reset" image="reset" id="ULV-6j-Ocg">
+                            <connections>
+                                <action selector="resetButtonTapped:" destination="nhk-vf-Lwv" id="btW-iX-R6W"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="JYg-aZ-Dgk"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="4HK-XQ-MfT">
                         <barButtonItem key="leftBarButtonItem" image="xmark" id="sRm-zj-dKs">
@@ -173,6 +179,16 @@
                             <barButtonItem image="checkmark" id="MnX-n9-dH7">
                                 <connections>
                                     <action selector="continueButtonPressed:" destination="nhk-vf-Lwv" id="vGC-by-Xfm"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Redo" image="redo" id="AI4-CO-7O1" userLabel="Redo Button">
+                                <connections>
+                                    <action selector="redoButtonTapped:" destination="nhk-vf-Lwv" id="ssw-VN-ygr"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Undo" image="undo" id="FSx-7s-x81">
+                                <connections>
+                                    <action selector="undoButtonTapped:" destination="nhk-vf-Lwv" id="xEP-Wd-8pm"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -194,10 +210,13 @@
                         <outlet property="drawButton" destination="YqN-rn-fCc" id="DF6-zv-b1e"/>
                         <outlet property="imageView" destination="YX6-so-ZpI" id="yHR-6q-2qP"/>
                         <outlet property="imageViewHeightConstraint" destination="94H-F7-Plt" id="oQ8-Az-ema"/>
+                        <outlet property="redoButton" destination="AI4-CO-7O1" id="CAN-AY-MvH"/>
+                        <outlet property="resetButton" destination="ULV-6j-Ocg" id="DbE-Qa-DbO"/>
                         <outlet property="saveButton" destination="XOc-bq-vr7" id="ys9-nb-8n6"/>
                         <outlet property="shareButton" destination="OmW-n0-zdM" id="3sm-Jh-3fj"/>
                         <outlet property="stickerButton" destination="XcD-aN-qZS" id="hVT-sq-eBg"/>
                         <outlet property="textButton" destination="7C7-Fp-hcK" id="2VT-e5-cJn"/>
+                        <outlet property="undoButton" destination="FSx-7s-x81" id="Los-IF-arl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g8K-I6-KiX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -270,10 +289,13 @@
         <image name="crop" width="28" height="32.5"/>
         <image name="pencil.and.outline" width="26" height="30.5"/>
         <image name="photo" width="31" height="24.5"/>
+        <image name="redo" width="16" height="16"/>
+        <image name="reset" width="16" height="16"/>
         <image name="square.and.arrow.down" width="25" height="30.5"/>
         <image name="square.and.arrow.up" width="25" height="31.5"/>
         <image name="text.cursor" width="26.5" height="29.5"/>
         <image name="trash" width="24.5" height="30.5"/>
+        <image name="undo" width="16" height="16"/>
         <image name="xmark" width="23" height="19.5"/>
         <systemColor name="systemFillColor">
             <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
