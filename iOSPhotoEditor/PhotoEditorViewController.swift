@@ -48,7 +48,7 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet weak var textButton: UIBarButtonItem!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var shareButton: UIBarButtonItem!
-    @IBOutlet weak var clearButton: UIBarButtonItem!
+    @IBOutlet var clearButton: UIBarButtonItem!
     @IBOutlet var undoButton: UIBarButtonItem!
     @IBOutlet var redoButton: UIBarButtonItem!
     @IBOutlet var resetButton: UIBarButtonItem!
