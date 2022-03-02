@@ -24,7 +24,7 @@ extension PhotoEditorViewController {
     }
 
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
-        guard undoManager?.canUndo == true else {
+        guard undoManager?.canUndo == true && isDrawing else {
             cancel()
             return
         }
@@ -202,8 +202,10 @@ extension PhotoEditorViewController {
                 barButtonItems.append(flexibleSpaceBarButtonItem())
                 barButtonItems.append(textButton)
             case .clear:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(clearButton)
+                if !canResetLines {
+                    barButtonItems.append(flexibleSpaceBarButtonItem())
+                    barButtonItems.append(clearButton)
+                }
             case .reset:
                 if canResetLines {
                     barButtonItems.append(flexibleSpaceBarButtonItem())
