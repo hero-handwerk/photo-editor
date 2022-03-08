@@ -66,20 +66,7 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         var interfaceOrientation: UIInterfaceOrientation
-        if #available(iOS 13.0, *) {
-            interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation
-                    ?? UIInterfaceOrientation.unknown
-        }
-        else {
-            interfaceOrientation = UIApplication.shared.statusBarOrientation
-        }
-        var width: CGFloat
-        if interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight {
-            width =  (CGFloat) ((screenSize.height - layout.sectionInset.left - layout.sectionInset.right) / 3.0)
-        }
-        else {
-            width =  (CGFloat) ((screenSize.width - layout.sectionInset.left - layout.sectionInset.right) / 3.0)
-        }
+        let width =  (CGFloat) ((screenSize.width - layout.sectionInset.left - layout.sectionInset.right) / 3.0)
         layout.itemSize = CGSize(width: width, height: 100)
 
         stickerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
