@@ -78,22 +78,28 @@ open class CropViewController: UIViewController {
         // Add CropView
         cropView = CropView(frame: contentView.bounds)
         contentView.addSubview(cropView!)
-        
     }
 
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let navigationBarHeight = navigationController?.navigationBar.frame.height else { return }
+        let bottomSafeArea: CGFloat
+
+        if #available(iOS 11.0, *) {
+            bottomSafeArea = view.safeAreaInsets.bottom
+        } else {
+            bottomSafeArea = bottomLayoutGuide.length
+        }
+        
+        cropView?.navigationBarHeight = navigationBarHeight
+        cropView?.bottomSafetyAreaSize = bottomSafeArea
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(CropViewController.cancel(_:)))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(CropViewController.done(_:)))
-        
-        if self.toolbarItems == nil {
-            let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            let constrainButton = UIBarButtonItem(title: "Constrain", style: .plain, target: self, action: #selector(CropViewController.constrain(_:)))
-            toolbarItems = [flexibleSpace, constrainButton, flexibleSpace]
-        }
-        
-        navigationController?.isToolbarHidden = toolbarHidden
+        setupNavigationBar()
+        setupTabbar()
         
         cropView?.image = image
         cropView?.rotationGestureRecognizer.isEnabled = rotationEnabled
@@ -143,7 +149,7 @@ open class CropViewController: UIViewController {
     
     @objc func constrain(_ sender: UIBarButtonItem) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let original = UIAlertAction(title: "Original", style: .default) { [unowned self] action in
+        let original = UIAlertAction(title: "Ursprüngliche Maße", style: .default) { [unowned self] action in
             guard let image = self.cropView?.image else {
                 return
             }
@@ -163,7 +169,7 @@ open class CropViewController: UIViewController {
             self.cropView?.cropRect = cropRect
         }
         actionSheet.addAction(original)
-        let square = UIAlertAction(title: "Square", style: .default) { [unowned self] action in
+        let square = UIAlertAction(title: "Quadratisch", style: .default) { [unowned self] action in
             let ratio: CGFloat = 1.0
 //            self.cropView?.cropAspectRatio = ratio
             if var cropRect = self.cropView?.cropRect {
@@ -211,7 +217,7 @@ open class CropViewController: UIViewController {
             }
         }
         actionSheet.addAction(widescreen)
-        let cancel = UIAlertAction(title: "Cancel", style: .default) { [unowned self] action in
+        let cancel = UIAlertAction(title: "Abbrechen", style: .default) { [unowned self] action in
             self.dismiss(animated: true, completion: nil)
         }
         actionSheet.addAction(cancel)
@@ -240,6 +246,33 @@ open class CropViewController: UIViewController {
         cropView?.cropRect = cropViewCropRect
     }
     
+    fileprivate func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(CropViewController.cancel(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(CropViewController.done(_:)))
+        
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithDefaultBackground()
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        }
+    }
     
-
+    fileprivate func setupTabbar() {
+        if self.toolbarItems == nil {
+            let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let constrainButton = UIBarButtonItem(title: "Zuschneiden", style: .plain, target: self, action: #selector(CropViewController.constrain(_:)))
+            toolbarItems = [flexibleSpace, constrainButton, flexibleSpace]
+        }
+        
+        if #available(iOS 15, *) {
+            let appearance = UIToolbarAppearance()
+            appearance.configureWithDefaultBackground()
+            navigationController?.toolbar.standardAppearance = appearance
+            navigationController?.toolbar.scrollEdgeAppearance = appearance
+            
+        }
+        
+        navigationController?.isToolbarHidden = toolbarHidden
+    }
 }
