@@ -103,7 +103,7 @@ open class CropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate, 
         }
     }
     open var rotationGestureRecognizer: UIRotationGestureRecognizer!
-    open var bottomSafetyAreaSize: CGFloat = .zero
+    open var bottomSafeAreaSize: CGFloat = .zero
     open var navigationBarHeight: CGFloat = .zero
     fileprivate var imageSize = CGSize(width: 1.0, height: 1.0)
     fileprivate var scrollView: UIScrollView!
@@ -118,15 +118,15 @@ open class CropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate, 
     fileprivate var previousBounds: CGRect = .zero
     fileprivate var resizing = false
     fileprivate var usingCustomImageView = false
-    fileprivate let MarginLeft: CGFloat = 20.0
-    fileprivate let MarginRight: CGFloat = 20.0
+    fileprivate let marginLeft: CGFloat = 20.0
+    fileprivate let marginRight: CGFloat = 20.0
     fileprivate let padding: CGFloat = 20.0
     
-    fileprivate var MarginBottom: CGFloat {
-        return bottomSafetyAreaSize + padding
+    fileprivate var marginBottom: CGFloat {
+        return bottomSafeAreaSize + padding
     }
     
-    fileprivate var MarginTop: CGFloat {
+    fileprivate var marginTop: CGFloat {
         return navigationBarHeight + padding
     }
     
@@ -198,9 +198,9 @@ open class CropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate, 
 
         if imageView == nil {
             if bounds.width < bounds.height {
-                insetRect = bounds.inset(by: UIEdgeInsets(top: MarginTop, left: MarginLeft, bottom: MarginBottom, right: MarginRight))
+                insetRect = bounds.inset(by: UIEdgeInsets(top: marginTop, left: marginLeft, bottom: marginBottom, right: marginRight))
             } else {
-                insetRect = bounds.insetBy(dx: MarginLeft, dy: MarginLeft)
+                insetRect = bounds.insetBy(dx: marginLeft, dy: marginLeft)
             }
             if !showCroppedArea {
                 insetRect = editingRect
@@ -209,9 +209,9 @@ open class CropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate, 
             setupImageView()
         } else if usingCustomImageView {
             if bounds.width < bounds.height {
-                insetRect = bounds.inset(by: UIEdgeInsets(top: MarginTop, left: MarginLeft, bottom: MarginBottom, right: MarginRight))
+                insetRect = bounds.inset(by: UIEdgeInsets(top: marginTop, left: marginLeft, bottom: marginBottom, right: marginRight))
             } else {
-                insetRect = bounds.insetBy(dx: MarginLeft, dy: MarginLeft)
+                insetRect = bounds.insetBy(dx: marginLeft, dy: marginLeft)
             }
             if !showCroppedArea {
                 insetRect = editingRect
@@ -309,9 +309,9 @@ open class CropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate, 
     
     fileprivate func setupEditingRect() {
         if  bounds.width < bounds.height {
-            editingRect = bounds.inset(by: UIEdgeInsets(top: MarginTop, left: MarginLeft, bottom: MarginBottom, right: MarginRight))
+            editingRect = bounds.inset(by: UIEdgeInsets(top: marginTop, left: marginLeft, bottom: marginBottom, right: marginRight))
         } else {
-            editingRect = bounds.insetBy(dx: MarginLeft, dy: MarginLeft)
+            editingRect = bounds.insetBy(dx: marginLeft, dy: marginLeft)
         }
         if !showCroppedArea {
             editingRect = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)

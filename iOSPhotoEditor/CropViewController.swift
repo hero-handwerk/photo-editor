@@ -83,16 +83,10 @@ open class CropViewController: UIViewController {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard let navigationBarHeight = navigationController?.navigationBar.frame.height else { return }
-        let bottomSafeArea: CGFloat
-
-        if #available(iOS 11.0, *) {
-            bottomSafeArea = view.safeAreaInsets.bottom
-        } else {
-            bottomSafeArea = bottomLayoutGuide.length
-        }
+        let bottomSafeArea = view.safeAreaInsets.bottom
         
         cropView?.navigationBarHeight = navigationBarHeight
-        cropView?.bottomSafetyAreaSize = bottomSafeArea
+        cropView?.bottomSafeAreaSize = bottomSafeArea
     }
     
     open override func viewDidLoad() {
