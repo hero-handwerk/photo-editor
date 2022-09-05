@@ -25,7 +25,7 @@ public protocol PhotoEditorDelegate: class {
     func canceledEditing()
 
     /// Retrieve custom Mail activity to be able to set the recipient address
-    func mailActivity(emailRecipient: String) -> UIActivity
+    func mailActivity(emailRecipient: String) -> UIActivity?
 }
 
 
