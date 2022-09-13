@@ -121,8 +121,8 @@ public final class PhotoEditorViewController: UIViewController {
     public init?(
         coder: NSCoder,
         imageData: ImageData,
-        delegate: PhotoEditorDelegate,
-        tracker: PhotoEditorTracker
+        delegate: PhotoEditorDelegate?,
+        tracker: PhotoEditorTracker?
     ) {
         super.init(coder: coder)
 
