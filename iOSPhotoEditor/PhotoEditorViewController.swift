@@ -24,6 +24,23 @@ public final class PhotoEditorViewController: UIViewController {
         case reset
     }
     
+    public struct ImageData {
+        private(set) var image: UIImage?
+        let emailRecipientForSharing: String?
+        
+        public init(image: UIImage?, emailRecipientForSharing: String?) {
+            self.image = image
+            self.emailRecipientForSharing = emailRecipientForSharing
+        }
+    
+        public init(imageFileURL: URL, emailRecipientForSharing: String?) {
+            if let data = try? Data(contentsOf: imageFileURL), let image = UIImage(data: data) {
+                self.image = image
+            }
+            self.emailRecipientForSharing = emailRecipientForSharing
+        }
+    }
+
     /** holding the 2 imageViews original image and drawing & stickers */
     @IBOutlet weak var canvasView: UIView!
     //To hold the image
@@ -53,10 +70,15 @@ public final class PhotoEditorViewController: UIViewController {
     @IBOutlet var redoButton: UIBarButtonItem!
     @IBOutlet var resetButton: UIBarButtonItem!
     
-    private(set) var image: UIImage? {
+    public static let storyboardForInit = UIStoryboard(
+        name: "PhotoEditor",
+        bundle: Bundle.iOSPhotoEditorResourceBundle
+    )
+    
+    private(set) var imageData: ImageData? {
         didSet {
             if isViewLoaded {
-                setImageView(image: image)
+                setImageView(image: imageData?.image)
             }
         }
     }
@@ -95,15 +117,29 @@ public final class PhotoEditorViewController: UIViewController {
     var canResetLines = false
 
     weak var stickersViewController: StickersViewController?
+    
+    public init?(
+        coder: NSCoder,
+        imageData: ImageData,
+        delegate: PhotoEditorDelegate?,
+        tracker: PhotoEditorTracker?
+    ) {
+        super.init(coder: coder)
 
-    deinit {
-        print("deinit")
+        self.imageData = imageData
+        self.photoEditorDelegate = delegate
+        self.tracker = tracker
     }
-
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        setImageView(image: image)
+        setImageView(image: imageData?.image)
         
         deleteView.layer.cornerRadius = deleteView.bounds.height / 2
         deleteView.layer.borderWidth = 2.0
@@ -263,30 +299,5 @@ extension PhotoEditorViewController: ColorDelegate {
             activeTextView?.textColor = color
             textColor = color
         }
-    }
-}
-
-// MARK: - Builder
-public extension PhotoEditorViewController {
-    static public func make(image: UIImage, delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
-        let photoEditor = instantiate(delegate: delegate, tracker: tracker)
-        photoEditor?.image = image
-        return photoEditor
-    }
-    
-    static public func make(imageFileURL: URL, delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
-        let photoEditor = instantiate(delegate: delegate, tracker: tracker)
-        if let data = try? Data(contentsOf: imageFileURL) {
-            photoEditor?.image = UIImage(data: data)
-        }
-        return photoEditor
-    }
-    
-    static private func instantiate(delegate: PhotoEditorDelegate, tracker: PhotoEditorTracker) -> PhotoEditorViewController? {
-        let photoEditor = UIStoryboard(name: "PhotoEditor", bundle: Bundle.iOSPhotoEditorResourceBundle)
-            .instantiateViewController(withIdentifier: String(describing: PhotoEditorViewController.self)) as? PhotoEditorViewController
-        photoEditor?.photoEditorDelegate = delegate
-        photoEditor?.tracker = tracker
-        return photoEditor
     }
 }

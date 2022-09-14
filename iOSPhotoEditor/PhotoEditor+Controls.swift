@@ -41,7 +41,7 @@ extension PhotoEditorViewController {
     @IBAction func cropButtonTapped(_ sender: Any) {
         let controller = CropViewController()
         controller.delegate = self
-        controller.image = image
+        controller.image = imageData?.image
         let navController = UINavigationController(rootViewController: controller)
 
         navController.navigationBar.tintColor = navigationController?.navigationBar.tintColor
@@ -92,7 +92,7 @@ extension PhotoEditorViewController {
         textView.becomeFirstResponder()
         
         tracker?.track(event: .text)
-    }    
+    }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         view.endEditing(true)
@@ -111,11 +111,18 @@ extension PhotoEditorViewController {
     }
     
     @IBAction func shareButtonTapped(_ sender: Any) {
-        let activity = UIActivityViewController(activityItems: [canvasView.toImage()], applicationActivities: nil)
-        present(activity, animated: true, completion: nil)
+        let activityController: UIActivityViewController
+        
+        if let mailActivity = photoEditorDelegate?.mailActivity(emailRecipient: imageData?.emailRecipientForSharing ?? "") {
+            activityController = UIActivityViewController(activityItems: [canvasView.toImage()], applicationActivities: [mailActivity])
+            activityController.excludedActivityTypes = [.mail]
+        } else {
+            activityController = UIActivityViewController(activityItems: [canvasView.toImage()], applicationActivities: nil)
+        }
+        
+        present(activityController, animated: true, completion: nil)
         
         tracker?.track(event: .share)
-        
     }
     
     @IBAction func clearButtonTapped(_ sender: AnyObject) {
