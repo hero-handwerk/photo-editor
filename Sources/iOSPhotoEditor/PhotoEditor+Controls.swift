@@ -110,7 +110,7 @@ extension PhotoEditorViewController {
         UIImageWriteToSavedPhotosAlbum(canvasView.toImage(),self, #selector(PhotoEditorViewController.image(_:withPotentialError:contextInfo:)), nil)
     }
     
-    @IBAction func shareButtonTapped(_ sender: Any) {
+    @IBAction func shareButtonTapped(_ sender: UIBarButtonItem) {
         let activityController: UIActivityViewController
         
         if let mailActivity = photoEditorDelegate?.mailActivity(emailRecipient: imageData?.emailRecipientForSharing ?? "") {
@@ -120,6 +120,7 @@ extension PhotoEditorViewController {
             activityController = UIActivityViewController(activityItems: [canvasView.toImage()], applicationActivities: nil)
         }
         
+        activityController.popoverPresentationController?.barButtonItem = sender
         present(activityController, animated: true, completion: nil)
         
         tracker?.track(event: .share)
