@@ -249,7 +249,9 @@ extension PhotoEditorViewController {
         for subview in canvasImageView.subviews {
             subview.removeFromSuperview()
         }
-        draw(backupColoredLines)
+        draw { cgContext in
+            drawColoredLines(backupColoredLines, cgContext: cgContext)
+        }
         coloredLines = backupColoredLines
         canResetLines = false
         addControls(animated: false)
