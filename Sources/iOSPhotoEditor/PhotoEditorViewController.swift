@@ -164,6 +164,11 @@ public final class PhotoEditorViewController: UIViewController {
         super.viewWillAppear(animated)
         showToolbar(show: true, animated: false)
     }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        undoManager?.removeAllActions()
+    }
 
     public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
