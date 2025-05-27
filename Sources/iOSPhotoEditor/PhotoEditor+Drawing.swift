@@ -10,13 +10,14 @@ import UIKit
 extension PhotoEditorViewController {
     
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        coloredLines.append([ColoredPoint]())
-        
         if isDrawing {
             swiped = false
             if let touch = touches.first {
                 lastPoint = touch.location(in: self.canvasImageView)
             }
+            
+            let firstColoredLine = [ColoredPoint(point: lastPoint, color: drawColor)]
+            coloredLines.append(firstColoredLine)
         }
             //Hide stickersVC if clicked outside it
         else if let stickersViewController = self.stickersViewController {
@@ -27,10 +28,6 @@ extension PhotoEditorViewController {
                 }
             }
         }
-        
-        guard var firstColoredLine = coloredLines.popLast() else { return }
-        firstColoredLine.append(ColoredPoint(point: lastPoint, color: drawColor))
-        coloredLines.append(firstColoredLine)
     }
     
     override public func touchesMoved(_ touches: Set<UITouch>,
@@ -55,12 +52,12 @@ extension PhotoEditorViewController {
     
     override public func touchesEnded(_ touches: Set<UITouch>,
                                       with event: UIEvent?){
-        if isDrawing {
-            if !swiped {
-                // draw a single point
-                draw { cgContext in
-                    drawLineFrom(lastPoint, toPoint: lastPoint, withColor: drawColor, cgContext: cgContext)
-                }
+        guard isDrawing else { return }
+        
+        if !swiped {
+            // draw a single point
+            draw { cgContext in
+                drawLineFrom(lastPoint, toPoint: lastPoint, withColor: drawColor, cgContext: cgContext)
             }
         }
         addLineUndoActionRegister()
