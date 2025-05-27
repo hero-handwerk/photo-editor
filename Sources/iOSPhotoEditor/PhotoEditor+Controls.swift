@@ -156,6 +156,8 @@ extension PhotoEditorViewController {
     }
     
     @IBAction func continueButtonPressed(_ sender: Any) {
+        clearUndoManager()
+        
         let img = self.canvasView.toImage()
         photoEditorDelegate?.doneEditing(image: img)
         self.dismiss(animated: true, completion: nil)
@@ -232,12 +234,18 @@ extension PhotoEditorViewController {
         UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     }
     
+    private func clearUndoManager() {
+        undoManager?.removeAllActions(withTarget: self)
+    }
+    
     func manageBarButtonVisibility() {
         undoButton.isEnabled = undoManager?.canUndo ?? false
         redoButton.isEnabled = undoManager?.canRedo ?? false
     }
     
     func cancel() {
+        clearUndoManager()
+        
         photoEditorDelegate?.canceledEditing()
         dismiss(animated: true, completion: nil)
         
