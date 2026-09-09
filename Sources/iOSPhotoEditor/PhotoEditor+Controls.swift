@@ -218,22 +218,20 @@ extension PhotoEditorViewController {
 
         if buttons.isEmpty { return }
 
-        var barButtonItems = [UIBarButtonItem]()
+        // iOS 26 groups adjacent items into one glass capsule and splits the group at every
+        // space item, so only the outer spaces are used there. Older systems spread the buttons.
+        let separator: [UIBarButtonItem]
         if #available(iOS 26.0, *) {
-            // Adjacent items share a single glass group, while a space item between two of them
-            // splits the group in half. Only the outer spaces are needed to centre the whole set.
-            barButtonItems.append(flexibleSpaceBarButtonItem())
-            barButtonItems.append(contentsOf: buttons)
-            barButtonItems.append(flexibleSpaceBarButtonItem())
+            separator = []
         } else {
-            for button in buttons {
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(button)
-            }
-            barButtonItems.append(flexibleSpaceBarButtonItem())
+            separator = [flexibleSpaceBarButtonItem()]
         }
 
-        setToolbarItems(barButtonItems, animated: animated)
+        let itemsToCenter = Array(buttons.map { [$0] }.joined(separator: separator))
+        setToolbarItems(
+            [flexibleSpaceBarButtonItem()] + itemsToCenter + [flexibleSpaceBarButtonItem()],
+            animated: animated
+        )
     }
 
     private func flexibleSpaceBarButtonItem() -> UIBarButtonItem {
