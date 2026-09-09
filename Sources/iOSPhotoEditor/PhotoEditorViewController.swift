@@ -205,7 +205,7 @@ public final class PhotoEditorViewController: UIViewController {
     }
     
     func showToolbar(show: Bool, animated: Bool = true) {
-        let toolbarIsHidden = navigationController?.toolbar.isHidden ?? false
+        let toolbarIsHidden = navigationController?.isToolbarHidden ?? false
         if show {
             addControls(animated: animated && !toolbarIsHidden)
         }
