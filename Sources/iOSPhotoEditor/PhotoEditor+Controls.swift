@@ -188,44 +188,50 @@ extension PhotoEditorViewController {
     }
     
     func addControls(animated: Bool = true) {
-        var barButtonItems = [UIBarButtonItem]()
+        var buttons = [UIBarButtonItem]()
         let visibleControls = Set(PhotoEditorViewController.Controls.allCases).subtracting(Set(hiddenControls))
                 .sorted { $0.rawValue < $1.rawValue  }
         for control in visibleControls {
             switch control {
             case .save:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(saveButton)
+                buttons.append(saveButton)
             case .share:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(shareButton)
+                buttons.append(shareButton)
             case .crop:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(cropButton)
+                buttons.append(cropButton)
             case .sticker:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(stickerButton)
+                buttons.append(stickerButton)
             case .draw:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(drawButton)
+                buttons.append(drawButton)
             case .text:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(textButton)
+                buttons.append(textButton)
             case .clear:
                 if !canResetLines {
-                    barButtonItems.append(flexibleSpaceBarButtonItem())
-                    barButtonItems.append(clearButton)
+                    buttons.append(clearButton)
                 }
             case .reset:
                 if canResetLines {
-                    barButtonItems.append(flexibleSpaceBarButtonItem())
-                    barButtonItems.append(resetButton)
+                    buttons.append(resetButton)
                 }
             }
         }
 
-        if barButtonItems.isEmpty { return }
-        barButtonItems.append(flexibleSpaceBarButtonItem())
+        if buttons.isEmpty { return }
+
+        var barButtonItems = [UIBarButtonItem]()
+        if #available(iOS 26.0, *) {
+            // Adjacent items share a single glass group, while a space item between two of them
+            // splits the group in half. Only the outer spaces are needed to centre the whole set.
+            barButtonItems.append(flexibleSpaceBarButtonItem())
+            barButtonItems.append(contentsOf: buttons)
+            barButtonItems.append(flexibleSpaceBarButtonItem())
+        } else {
+            for button in buttons {
+                barButtonItems.append(flexibleSpaceBarButtonItem())
+                barButtonItems.append(button)
+            }
+            barButtonItems.append(flexibleSpaceBarButtonItem())
+        }
 
         setToolbarItems(barButtonItems, animated: animated)
     }
