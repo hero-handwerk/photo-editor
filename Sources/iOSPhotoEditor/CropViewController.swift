@@ -242,8 +242,13 @@ open class CropViewController: UIViewController {
     
     fileprivate func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(CropViewController.cancel(_:)))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(CropViewController.done(_:)))
-        
+
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(CropViewController.done(_:)))
+        if #available(iOS 26.0, *) {
+            doneButton.style = .plain   // To align with the style of Done buttons in the main app
+        }
+        navigationItem.rightBarButtonItem = doneButton
+
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithDefaultBackground()

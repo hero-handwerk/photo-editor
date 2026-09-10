@@ -52,6 +52,13 @@ extension PhotoEditorViewController {
         navController.toolbar.barTintColor = navigationController?.toolbar.barTintColor
         navController.toolbar.isTranslucent = navigationController?.toolbar.isTranslucent ?? false
 
+        // The crop screen gets a fresh navigation controller, which does not inherit the presenting
+        // one's forced interface style. Without this it runs light traits over a black canvas and
+        // every semantic color on it resolves wrong.
+        if #available(iOS 13.0, *) {
+            navController.overrideUserInterfaceStyle = navigationController?.overrideUserInterfaceStyle ?? .unspecified
+        }
+
         present(navController, animated: true, completion: nil)
         
         tracker?.track(event: .crop)
@@ -188,46 +195,50 @@ extension PhotoEditorViewController {
     }
     
     func addControls(animated: Bool = true) {
-        var barButtonItems = [UIBarButtonItem]()
+        var buttons = [UIBarButtonItem]()
         let visibleControls = Set(PhotoEditorViewController.Controls.allCases).subtracting(Set(hiddenControls))
                 .sorted { $0.rawValue < $1.rawValue  }
         for control in visibleControls {
             switch control {
             case .save:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(saveButton)
+                buttons.append(saveButton)
             case .share:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(shareButton)
+                buttons.append(shareButton)
             case .crop:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(cropButton)
+                buttons.append(cropButton)
             case .sticker:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(stickerButton)
+                buttons.append(stickerButton)
             case .draw:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(drawButton)
+                buttons.append(drawButton)
             case .text:
-                barButtonItems.append(flexibleSpaceBarButtonItem())
-                barButtonItems.append(textButton)
+                buttons.append(textButton)
             case .clear:
                 if !canResetLines {
-                    barButtonItems.append(flexibleSpaceBarButtonItem())
-                    barButtonItems.append(clearButton)
+                    buttons.append(clearButton)
                 }
             case .reset:
                 if canResetLines {
-                    barButtonItems.append(flexibleSpaceBarButtonItem())
-                    barButtonItems.append(resetButton)
+                    buttons.append(resetButton)
                 }
             }
         }
 
-        if barButtonItems.isEmpty { return }
-        barButtonItems.append(flexibleSpaceBarButtonItem())
+        if buttons.isEmpty { return }
 
-        setToolbarItems(barButtonItems, animated: animated)
+        // iOS 26 groups adjacent items into one glass capsule and splits the group at every
+        // space item, so only the outer spaces are used there. Older systems spread the buttons.
+        let separator: [UIBarButtonItem]
+        if #available(iOS 26.0, *) {
+            separator = []
+        } else {
+            separator = [flexibleSpaceBarButtonItem()]
+        }
+
+        let itemsToCenter = Array(buttons.map { [$0] }.joined(separator: separator))
+        setToolbarItems(
+            [flexibleSpaceBarButtonItem()] + itemsToCenter + [flexibleSpaceBarButtonItem()],
+            animated: animated
+        )
     }
 
     private func flexibleSpaceBarButtonItem() -> UIBarButtonItem {
