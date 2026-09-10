@@ -158,6 +158,9 @@ public final class PhotoEditorViewController: UIViewController {
         manageBarButtonVisibility()
         configureCollectionView()
         navigationItem.rightBarButtonItems = [continueButton]
+        if #available(iOS 26.0, *) {
+            doneButton.style = .plain   // To align with the style of Done buttons in the main app
+        }
     }
 
     public override func viewWillAppear(_ animated: Bool) {

@@ -52,6 +52,13 @@ extension PhotoEditorViewController {
         navController.toolbar.barTintColor = navigationController?.toolbar.barTintColor
         navController.toolbar.isTranslucent = navigationController?.toolbar.isTranslucent ?? false
 
+        // The crop screen gets a fresh navigation controller, which does not inherit the presenting
+        // one's forced interface style. Without this it runs light traits over a black canvas and
+        // every semantic color on it resolves wrong.
+        if #available(iOS 13.0, *) {
+            navController.overrideUserInterfaceStyle = navigationController?.overrideUserInterfaceStyle ?? .unspecified
+        }
+
         present(navController, animated: true, completion: nil)
         
         tracker?.track(event: .crop)
