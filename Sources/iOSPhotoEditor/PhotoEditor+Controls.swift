@@ -152,12 +152,10 @@ extension PhotoEditorViewController {
     
     @IBAction func resetButtonTapped(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Möchten Sie wirklich alle Markierungen wiederherstellen?", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Abbrechen", style: .destructive))
-        
-        let actionStyle: UIAlertAction.Style = UIDevice.current.userInterfaceIdiom == .pad ? .default : .cancel
-        alert.addAction(UIAlertAction(title: "Wiederherstellen", style: actionStyle) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "Wiederherstellen", style: .default) { [weak self] _ in
             self?.reset()
         })
+        alert.addAction(UIAlertAction(title: "Abbrechen", style: .cancel))
         alert.popoverPresentationController?.barButtonItem = sender
         present(alert, animated: true, completion: nil)
     }
